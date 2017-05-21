@@ -27,7 +27,7 @@ void led_init(void)
         RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);            // 使能COLOR_TIMx时钟
         
         /* 基本定时器配置 */
-        TIM_TimeBaseStructure.TIM_Period = 255;                         // 当定时器从 0 计数到 255 ，即为 256 次，为一个定时周期
+        TIM_TimeBaseStructure.TIM_Period = 255;                         // 当定时器从 0 计数到 255 , 即为 256 次, 为一个定时周期
         TIM_TimeBaseStructure.TIM_Prescaler = 1999;                     // 设置预分频
         TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1 ;        // 设置时钟分频系数：不分频(这里用不到)
         TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;     // 向上计数模式

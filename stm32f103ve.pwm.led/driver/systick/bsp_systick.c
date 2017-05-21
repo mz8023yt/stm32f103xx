@@ -50,7 +50,7 @@ void delay_us(u32 nus)
         /* 关闭滴答定时器 */
         SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
 
-        /* 设置滴答定时器的计数值为0，清空滴答定时器 */
+        /* 设置滴答定时器的计数值为 0, 清空滴答定时器 */
         SysTick->VAL = 0;
 }
 
@@ -73,12 +73,12 @@ static void delay_xms(u16 nms)
 }
 
 /**
- * @brief 延时nms毫秒
+ * @brief 延时 nms 毫秒
  * @param nms 延时时间 nms <= 65535
  */
 void delay_ms(u16 nms)
 {
-        /* 这个函数其实就是将nms分解开来，分解成为多个 1500ms * repeat + remain */
+        /* 这个函数其实就是将 nms 分解开来, 分解成为多个 1500ms * repeat + remain */
         u8 repeat = nms / 1500;
         u16 remain = nms % 1500;
 

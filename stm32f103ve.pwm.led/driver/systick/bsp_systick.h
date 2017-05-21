@@ -3,7 +3,7 @@
 
 #include "stm32f10x.h"
 
-/* 由于 STM32F103 的 GPIO 位于 Cortex-M3 位带区，可以通过下面的宏直接操作每一位 */
+/* 由于 STM32F103 的 GPIO 位于 Cortex-M3 位带区, 可以通过下面的宏直接操作每一位 */
 /* 具体原理请参考《Cortex-M3权威指南》*/
 #define BITBAND(addr, bitnum)   ((addr & 0xF0000000) + 0x2000000 + ((addr & 0xFFFFF) << 5)+(bitnum << 2))
 #define MEM_ADDR(addr)          *((volatile unsigned long * )(addr))
@@ -50,10 +50,10 @@
 #define PIout(n)        BIT_ADDR(GPIOI_ODR_Addr, n)
 #define PIin(n)         BIT_ADDR(GPIOI_IDR_Addr, n)
 
-#define SYSTEM_CLOCK 72                                         // 定义系统时钟，单位MHz
+#define SYSTEM_CLOCK 72                                         // 定义系统时钟, 单位MHz
 
 void systick_init(void);                                        // 初始化延时函数
-void delay_us(u32 nus);                                         // 延时 nus 微秒，最大延时 1864135us
-void delay_ms(u16 nms);                                         // 延时 nms 毫秒，最大延时 65536ms
+void delay_us(u32 nus);                                         // 延时 nus 微秒, 最大延时 1864135us
+void delay_ms(u16 nms);                                         // 延时 nms 毫秒, 最大延时 65536ms
 
 #endif /* __BSP_SYSTICK_H */

@@ -56,7 +56,7 @@ void led_init(void)
 
 void led_light_color(u32 rgb)
 {
-        TIM3->CCR2 = (uint8_t)(rgb>>16);                                // R
-        TIM3->CCR3 = (uint8_t)(rgb>>8);                                 // G
+        TIM3->CCR2 = (uint8_t)(rgb >> 16);                              // R
+        TIM3->CCR3 = (uint8_t)(rgb >> 8);                               // G
         TIM3->CCR4 = (uint8_t)rgb;                                      // B
 }

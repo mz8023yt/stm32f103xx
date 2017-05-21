@@ -335,7 +335,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD, USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\startup;..\library\inc;..\user;..\driver\led</IncludePath>
+              <IncludePath>..\startup;..\library\inc;..\user;..\driver\led;..\driver\systick;..\driver\usart</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -443,6 +443,11 @@
               <FileName>bsp_led.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\driver\led\bsp_led.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_systick.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\driver\systick\bsp_systick.c</FilePath>
             </File>
           </Files>
         </Group>

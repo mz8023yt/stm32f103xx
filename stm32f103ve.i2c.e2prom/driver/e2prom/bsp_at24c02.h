@@ -4,8 +4,8 @@
 #include "stm32f10x.h"
 
 /* AT24C02对应的器件地址为1010000x */
-#define AT24C02_READ      0xA1            // 前7位为固定器件地址，最后一位为1表示读
-#define AT24C02_WRITE     0xA0            // 前7位为固定器件地址，最后一位为0表示写
+#define AT24C02_READ      0xA1            // 前7位为固定器件地址, 最后一位为1表示读
+#define AT24C02_WRITE     0xA0            // 前7位为固定器件地址, 最后一位为0表示写
 
 void at24c02_init(void);
 int at24c02_set_current_address(u8 address);

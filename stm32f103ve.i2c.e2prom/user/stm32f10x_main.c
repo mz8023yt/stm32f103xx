@@ -14,6 +14,7 @@ int main(void)
         int address = 0;
         int data = 0;
         char* cmd = NULL;
+        int i;
         
         NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
         systick_init();
@@ -23,6 +24,8 @@ int main(void)
         
         while(1)
         {
+                
+                
                 /* 如果接收完了所有的字符(每一次串口中断接收一个字符) */
                 if (USART_RX_STA & 0x8000)
                 {
@@ -30,7 +33,7 @@ int main(void)
                         length = USART_RX_STA & 0x3fff;
                         USART_RX_BUF[length] = '\0';
                         
-                        printf("[stm32f10x][%s][%d]: %s \r\n", __FUNCTION__, __LINE__, (char *)USART_RX_BUF);
+                        // printf("[stm32f10x][%s][%d]: %s \r\n", __FUNCTION__, __LINE__, (char *)USART_RX_BUF);
                         
                         char* p;
                         p = strtok((char*)USART_RX_BUF, " ");
@@ -65,6 +68,32 @@ int main(void)
                                 // printf("[stm32f10x][%s][%d]: read the e2prom \r\n", __FUNCTION__, __LINE__);
                                 at24c02_random_read(address, buffer);
                                 printf("[stm32f10x][%s][%d]: %d address's data = %d\r\n", __FUNCTION__, __LINE__, address, buffer[0]);
+                        }
+                        else if(!strcmp("format", cmd))
+                        {
+                                /* 在buffer中准备好数据 */
+                                for(i = 0; i < 256; i++)
+                                {
+                                        buffer[i] = i;
+                                }
+                                
+                                for(i = 0; i < 32; i++)
+                                {
+                                        address = 8 * i;
+                                        at24c02_page_write(address, &buffer[address], 8);
+                                        delay_ms(5);
+                                }
+                        }
+                        else if(!strcmp("display", cmd))
+                        {
+                                at24c02_set_current_address(0);
+                                at24c02_sequentia_read(buffer, 256);
+                                for(i = 0; i < 256; i++)
+                                {
+                                        printf("%d\t", buffer[i]);
+                                        if(i % 16 == 15)
+                                                printf("\r\n");
+                                }
                         }
                         
                         /* 搞完事情后, 清空自定义的标志寄存器 */

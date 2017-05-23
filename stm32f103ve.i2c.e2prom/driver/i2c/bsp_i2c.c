@@ -3,8 +3,8 @@
 #include "bsp_usart.h"
 
 /**
- * @brief 控制I2C的速度
- * @param I2Cx  指定操作的I2C对象
+ * @brief 控制 I2C 的速度
+ * @param I2Cx 指定操作的 I2C 对象
  */
 void I2C_Delay(I2C_GpioDef* I2Cx)
 {
@@ -13,14 +13,14 @@ void I2C_Delay(I2C_GpioDef* I2Cx)
 
 /**
  * @brief I2C初始化函数
- * @param I2Cx  指定操作的I2C对象
- * @note 设置SCL和SDA的GPIO模式
+ * @param I2Cx 指定操作的I2C对象
+ * @note 设置 SCL 和 SDA 的 GPIO 模式
  */
 void i2c_init(I2C_GpioDef* I2Cx)
 {
         GPIO_InitTypeDef GPIO_InitStructure;
         
-        /* 计算SCLGpioClk和SDAGpioClk */
+        /* 计算 SCLGpioClk 和 SDAGpioClk */
         I2Cx->SCLGpioClk = RCC_APB2Periph_GPIOA << (((u32)(I2Cx->SCLGpioPort) - (u32) GPIOA_BASE) >> 10);
         I2Cx->SDAGpioClk = RCC_APB2Periph_GPIOA << (((u32)(I2Cx->SDAGpioPort) - (u32) GPIOA_BASE) >> 10);
         
@@ -37,8 +37,8 @@ void i2c_init(I2C_GpioDef* I2Cx)
         GPIO_InitStructure.GPIO_Pin = I2Cx->SDAGpioPin;
         GPIO_Init(I2Cx->SDAGpioPort, &GPIO_InitStructure);
         
-        /* 接收数据时，SDA为输入，有特定的函数去改变SDA引脚的GPIO模式 */
-        /* STM32作为IIC设备(从机)，SCL也是输入，但是我们本实验没有用到，因此一直为输出 */
+        /* 接收数据时, SDA为输入, 有特定的函数去改变SDA引脚的GPIO模式 */
+        /* STM32作为IIC设备(从机), SCL也是输入, 但是我们本实验没有用到, 因此一直为输出 */
 
         I2Cx->SCLPinNum = i2c_get_pin_num(I2Cx->SCLGpioPin);
         I2Cx->SDAPinNum = i2c_get_pin_num(I2Cx->SDAGpioPin);
@@ -82,19 +82,19 @@ void i2c_set_sda_output(I2C_GpioDef* I2Cx)
 /**
  * @brief 产生I2C起始信号
  * @param I2Cx  指定操作的I2C对象
- * @note 在SCL为高电平的情况下，SDA产生一个下降沿表示起始
+ * @note 在SCL为高电平的情况下, SDA产生一个下降沿表示起始
  */
 void i2c_start(I2C_GpioDef* I2Cx)
 {
         i2c_set_sda_output(I2Cx);
         
-        /* 这里需要注意顺序，SDA先拉高，SCL再拉高 */
-        /* 因为SCL为高电平的情况下，SDA的边沿动作是有意义的，因此SDA要先拉高 */
+        /* 这里需要注意顺序, SDA先拉高, SCL再拉高 */
+        /* 因为SCL为高电平的情况下, SDA的边沿动作是有意义的, 因此SDA要先拉高 */
         *(I2Cx->SDA) = 1;
         *(I2Cx->SCL) = 1;
         I2C_Delay(I2Cx);
         
-        /* 在SCL为高电平的情况下，SDA产生一个下降沿表示起始*/
+        /* 在SCL为高电平的情况下, SDA产生一个下降沿表示起始*/
         *(I2Cx->SDA) = 0;
         I2C_Delay(I2Cx);
         
@@ -105,14 +105,14 @@ void i2c_start(I2C_GpioDef* I2Cx)
 /**
  * @brief 产生I2C停止信号
  * @param I2Cx  指定操作的I2C对象
- * @note 在SCL为高电平的情况下，SDA产生一个上升沿表示停止
+ * @note 在SCL为高电平的情况下, SDA产生一个上升沿表示停止
  */
 void i2c_stop(I2C_GpioDef* I2Cx)
 {
         i2c_set_sda_output(I2Cx);
 
-        /* 这里需要注意顺序，SCL先拉低，SDA再拉低 */
-        /* 因为SCL为高电平的情况下，SDA的边沿动作是有意义的，因此SCL要先拉低 */
+        /* 这里需要注意顺序, SCL先拉低, SDA再拉低 */
+        /* 因为SCL为高电平的情况下, SDA的边沿动作是有意义的, 因此SCL要先拉低 */
         *(I2Cx->SCL) = 0;
         *(I2Cx->SDA) = 0;
         I2C_Delay(I2Cx);
@@ -128,20 +128,20 @@ void i2c_stop(I2C_GpioDef* I2Cx)
  * @brief 等待应答信号到来
  * @param I2Cx  指定操作的I2C对象
  * @return u8   0,接收应答成功; 1,接收应答失败;
- * @note 主机发送完一帧数据之后，需要等待从机给出响应才会继续发出下一帧数据
- * @note 这时候主机需要放出SDA的使用权，由从机负责拉低SDA(响应)
- * @note 主机在下一个SCL的上升沿(或说高电平)检测SDA是否为低电平，低电平则表示有应答
+ * @note 主机发送完一帧数据之后, 需要等待从机给出响应才会继续发出下一帧数据
+ * @note 这时候主机需要放出SDA的使用权, 由从机负责拉低SDA(响应)
+ * @note 主机在下一个SCL的上升沿(或说高电平)检测SDA是否为低电平, 低电平则表示有应答
  */
 int i2c_wait_response(I2C_GpioDef* I2Cx)
 {
-        /* 定义一个变量，作为超时的标记 */
+        /* 定义一个变量, 作为超时的标记 */
         int ucErrTime = 0;
         
         /* 先默认的把SDA设置为高电平 */
         *(I2Cx->SDA) = 1;
         I2C_Delay(I2Cx);
         
-        /* 这里需要接收从机的应答信号，因此需要设置为输入 */
+        /* 这里需要接收从机的应答信号, 因此需要设置为输入 */
         i2c_set_sda_input(I2Cx);
         
         /* 下一个SCL时钟到了 */
@@ -154,10 +154,10 @@ int i2c_wait_response(I2C_GpioDef* I2Cx)
         {
                 ucErrTime++;
 
-                /* 超时了，既然从机在规定的时间不应答*/
+                /* 超时了, 既然从机在规定的时间不应答*/
                 if(ucErrTime > 255)
                 {
-                        /* 主机就认为从机没有正确的接收，就此作罢 */
+                        /* 主机就认为从机没有正确的接收, 就此作罢 */
                         i2c_stop(I2Cx);
 
                         /* 函数返回接收应答失败 */
@@ -165,10 +165,10 @@ int i2c_wait_response(I2C_GpioDef* I2Cx)
                 }
         }
 
-        /* 到这里，读取应答信号的SCL结束了 */
+        /* 到这里, 读取应答信号的SCL结束了 */
         *(I2Cx->SCL) = 0;
 
-        /* 能执行到这里，说明读取到了应答的 */
+        /* 能执行到这里, 说明读取到了应答的 */
         return 0;
 }
 
@@ -176,21 +176,21 @@ int i2c_wait_response(I2C_GpioDef* I2Cx)
  * @brief HOST产生应答
  * @param I2Cx  指定操作的I2C对象
  * @note 此函数是在HOST(STM32)接收数据时才能使用
- * @note 如果只要接收4个字节，前3次应答，最后一次不应答就自动结束了。
+ * @note 如果只要接收4个字节, 前3次应答, 最后一次不应答就自动结束了。
  */
 void i2c_response(I2C_GpioDef* I2Cx)
 {
         *(I2Cx->SCL) = 0;
 
-        /* 要应答，肯定要先获取SDA的使用权 */
+        /* 要应答, 肯定要先获取SDA的使用权 */
         i2c_set_sda_output(I2Cx);
 
-        /* 在从机发送完本帧最后一个位的低电平期间，把SDA拉低 */
-        /* 千万不能在SCL高电平期间拉低，那就变成起始信号了 */
+        /* 在从机发送完本帧最后一个位的低电平期间, 把SDA拉低 */
+        /* 千万不能在SCL高电平期间拉低, 那就变成起始信号了 */
         *(I2Cx->SDA) = 0;
         I2C_Delay(I2Cx);
 
-        /* 这里就是从机读取应答信号的一个SCL时钟周期了，SDA不能动 */
+        /* 这里就是从机读取应答信号的一个SCL时钟周期了, SDA不能动 */
         *(I2Cx->SCL) = 1;
         I2C_Delay(I2Cx);
         *(I2Cx->SCL) = 0;
@@ -200,18 +200,18 @@ void i2c_response(I2C_GpioDef* I2Cx)
  * @brief HOST不产生应答
  * @param I2Cx  指定操作的I2C对象
  * @note 此函数是在HOST(STM32)接收数据时才能使用
- * @note 如果只要接收4个字节，前3次应答，最后一次不应答就自动结束了。
+ * @note 如果只要接收4个字节, 前3次应答, 最后一次不应答就自动结束了。
  */
 void i2c_no_response(I2C_GpioDef* I2Cx)
 {
         *(I2Cx->SCL) = 0;
         i2c_set_sda_output(I2Cx);
 
-        /* 既然拉低表示应答，那我拉高不就行了 */
+        /* 既然拉低表示应答, 那我拉高不就行了 */
         *(I2Cx->SDA) = 1;
         I2C_Delay(I2Cx);
 
-        /* 下一个时钟一检测，就发现，没有应答 */
+        /* 下一个时钟一检测, 就发现, 没有应答 */
         *(I2Cx->SCL) = 1;
         I2C_Delay(I2Cx);
         *(I2Cx->SCL) = 0;
@@ -236,11 +236,11 @@ void i2c_send_byte(I2C_GpioDef* I2Cx, u8 data)
                 /* 写入数据的最高位 */
                 *(I2Cx->SDA) = (data& 0x80) >> 7;
 
-                /* 发送完了最高位，数据左移一个，次高位变成了新的最高位 */
+                /* 发送完了最高位, 数据左移一个, 次高位变成了新的最高位 */
                 data <<= 1;
                 I2C_Delay(I2Cx);
 
-                /* 在SCL的上升沿(或者高电平期间)，数据被从机接收读取 */
+                /* 在SCL的上升沿(或者高电平期间), 数据被从机接收读取 */
                 *(I2Cx->SCL) = 1;
                 I2C_Delay(I2Cx);
                 *(I2Cx->SCL) = 0;
@@ -248,13 +248,13 @@ void i2c_send_byte(I2C_GpioDef* I2Cx, u8 data)
         }
         /* 这函数结束的时候是不是SCL = 0 */
         /* 一般这里接下来就会是WaitResponse操作了 */
-        /* WaitResponse的时候就是直接从SCL = 0开始的，这样就不会多出来一个SCL的脉冲 */
+        /* WaitResponse的时候就是直接从SCL = 0开始的, 这样就不会多出来一个SCL的脉冲 */
 }
 
 /**
- * @brief I2C读一个字节
- * @param I2Cx  指定操作的I2C对象
- * @note 根据参数决定要不要应答，如果只要接收4个字节，前3次应答，最后一次不应答就自动结束了。
+ * @brief I2C 读一个字节
+ * @param I2Cx 指定操作的 I2C 对象
+ * @note 根据参数决定要不要应答, 如果只要接收4个字节, 前3次应答, 最后一次不应答就自动结束了。
  */
 u8 i2c_receive_byte(I2C_GpioDef* I2Cx)
 {
@@ -276,7 +276,7 @@ u8 i2c_receive_byte(I2C_GpioDef* I2Cx)
 }
 
 /**
- * @brief 由GPIO_Pin_x获取到引脚编号
+ * @brief 由GPIO_Pin_x 获取到引脚编号
  * @param GPIO_Pin_x 需要解析的GPIO_Pin
  * @return u8 对应的引脚编号
  */

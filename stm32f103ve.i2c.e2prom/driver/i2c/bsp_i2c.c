@@ -219,8 +219,8 @@ void i2c_no_response(I2C_GpioDef* I2Cx)
 
 /**
  * @brief I2C发送一个字节
- * @param I2Cx  指定操作的I2C对象
- * @param data  发送的数据
+ * @param I2Cx 指定操作的I2C对象
+ * @param data 发送的数据
  */
 void i2c_send_byte(I2C_GpioDef* I2Cx, u8 data)
 {
@@ -276,46 +276,19 @@ u8 i2c_receive_byte(I2C_GpioDef* I2Cx)
 }
 
 /**
- * @brief      由GPIO_Pin_x获取到引脚编号
+ * @brief 由GPIO_Pin_x获取到引脚编号
  * @param GPIO_Pin_x 需要解析的GPIO_Pin
- * @return u8        对应的引脚编号
+ * @return u8 对应的引脚编号
  */
 u8 i2c_get_pin_num(u16 GPIO_Pin_x)
 {
-        switch(GPIO_Pin_x)
+        int num = 0;
+        
+        while(!(GPIO_Pin_x & 0x1))
         {
-                case (GPIO_Pin_0):
-                        return 0;
-                case (GPIO_Pin_1):
-                        return 1;
-                case (GPIO_Pin_2):
-                        return 2;
-                case (GPIO_Pin_3):
-                        return 3;
-                case (GPIO_Pin_4):
-                        return 4;
-                case (GPIO_Pin_5):
-                        return 5;
-                case (GPIO_Pin_6):
-                        return 6;
-                case (GPIO_Pin_7):
-                        return 7;
-                case (GPIO_Pin_8):
-                        return 8;
-                case (GPIO_Pin_9):
-                        return 9;
-                case (GPIO_Pin_10):
-                        return 10;
-                case (GPIO_Pin_11):
-                        return 11;
-                case (GPIO_Pin_12):
-                        return 12;
-                case (GPIO_Pin_13):
-                        return 13;
-                case (GPIO_Pin_14):
-                        return 14;
-                case (GPIO_Pin_15):
-                        return 15;
+                GPIO_Pin_x = GPIO_Pin_x >> 1;
+                num++;
         }
-        return 0;
+        
+        return num;
 }

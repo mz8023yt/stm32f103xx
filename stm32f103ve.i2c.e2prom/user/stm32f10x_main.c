@@ -4,96 +4,71 @@
 #include "bsp_led.h"
 #include "bsp_at24c02.h"
 #include "bsp_i2c.h"
-
-void test_page_write(void);
-void test_byte_write(void);
-void test_random_read(void);
-void test_sequentia_read(void);
-void test_current_address_read(void);
-
-int i;
-int result = -1;
-u8 address;
-u8 buffer[256];
+#include <string.h>
+#include <stdlib.h>
 
 int main(void)
 {
+        u8 buffer[8];
+        int length = 0;
+        int address = 0;
+        int data = 0;
+        char* cmd = NULL;
+        
         NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
         systick_init();
         usart_init();
         at24c02_init();
+        led_init();
         
-        test_page_write();
-        test_byte_write();
-        
-        test_sequentia_read();
-        printf("\r\n");
-        
-        test_random_read();
-        printf("\r\n");
-        
-        test_current_address_read();
-        
-        while(1);
-}
-
-void test_byte_write(void)
-{
-        buffer[0] = 0xff;
-        result = at24c02_byte_write(77, buffer);
-        if(result)
+        while(1)
         {
-                printf("[at24c02][%s]: fail line = %d \r\n", __FUNCTION__, __LINE__);
-        }
-        delay_ms(5);
-}
-
-void test_random_read(void)
-{
-        buffer[0] = 0;
-        result = at24c02_random_read(77, buffer);
-        if(result)
-        {
-                printf("[stmf10x][%s]: fail line = %d \r\n", __FUNCTION__, __LINE__);
-        }
-        printf("[stmf10x][%s]: the data in address 77 is %d\r\n", __FUNCTION__, buffer[0]);
-        delay_ms(5);
-}
-
-void test_page_write(void)
-{
-        /* 在buffer中准备好数据 */
-        for(i = 0; i < 256; i++)
-        {
-                buffer[i] = i;
-        }
-        
-        for(i = 0; i < 32; i++)
-        {
-                address = 8 * i;
-                result = at24c02_page_write(address, &buffer[address], 8);
-                delay_ms(5);
-                if(result)
+                /* 如果接收完了所有的字符(每一次串口中断接收一个字符) */
+                if (USART_RX_STA & 0x8000)
                 {
-                        printf("[stmf10x][%s]: fail line = %d \r\n", __FUNCTION__, __LINE__);
+                        /* 得到此次接收到的数据长度 */
+                        length = USART_RX_STA & 0x3fff;
+                        USART_RX_BUF[length] = '\0';
+                        
+                        printf("[stm32f10x][%s][%d]: %s \r\n", __FUNCTION__, __LINE__, (char *)USART_RX_BUF);
+                        
+                        char* p;
+                        p = strtok((char*)USART_RX_BUF, " ");
+                        if(p)
+                        {
+                                cmd = p;
+                                // printf("[stm32f10x][%s][%d]: %s \r\n", __FUNCTION__, __LINE__, cmd);
+                        }
+                        
+                        p = strtok(NULL, " ");
+                        if(p)
+                        {
+                                address = atoi(p);
+                                // printf("[stm32f10x][%s][%d]: %d \r\n", __FUNCTION__, __LINE__, address);
+                        }
+                        
+                        p = strtok(NULL, " ");
+                        if(p)
+                        {
+                                data = atoi(p);
+                                // printf("[stm32f10x][%s][%d]: %d \r\n", __FUNCTION__, __LINE__, data);
+                        }
+                        
+                        if(!strcmp("write", cmd))
+                        {
+                                // printf("[stm32f10x][%s][%d]: write the e2prom \r\n", __FUNCTION__, __LINE__);
+                                buffer[0] = data;
+                                at24c02_byte_write(address, buffer);
+                        }
+                        else if(!strcmp("read", cmd))
+                        {
+                                // printf("[stm32f10x][%s][%d]: read the e2prom \r\n", __FUNCTION__, __LINE__);
+                                at24c02_random_read(address, buffer);
+                                printf("[stm32f10x][%s][%d]: %d address's data = %d\r\n", __FUNCTION__, __LINE__, address, buffer[0]);
+                        }
+                        
+                        /* 搞完事情后, 清空自定义的标志寄存器 */
+                        USART_RX_STA = 0;
                 }
         }
-}
-
-void test_sequentia_read(void)
-{
-        at24c02_set_current_address(0);
-        at24c02_sequentia_read(buffer, 256);
-        for(i = 0; i < 256; i++)
-        {
-                printf("%d\t", buffer[i]);
-                if(i % 16 == 15)
-                        printf("\r\n");
-        }
-}
-
-void test_current_address_read(void)
-{
-        at24c02_current_address_read(buffer);
-        printf("[stmf10x][%s]: the current address's data is %d\r\n", __FUNCTION__, buffer[0]);
 }

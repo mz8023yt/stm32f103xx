@@ -98,16 +98,15 @@ void USART1_IRQHandler(void)
                                         /* 如果当前接收到的是0x0d的话 */
                                         /* 则置位接收到0x0d的标志位 USART_RX_STA[14] */
                                         USART_RX_STA |= 0x4000;
-//                                        USART_RX_STA |= 0x8000;
                                 }
                                 else
                                 {
                                         /* 将当前接收到的值存入缓存数组中 */
                                         USART_RX_BUF[USART_RX_STA & 0X3FFF] = Res;
-
+                                        
                                         /* 接收到的字节个数加一 */
                                         USART_RX_STA++;
-
+                                        
                                         /* 判断接收到的数据有没有超过最开始设置的缓存区长度 */
                                         if(USART_RX_STA > (USART_REC_LEN - 1))
                                         {
@@ -139,7 +138,7 @@ void _sys_exit(int x)
 }
 
 /**
- * @brief 重定义fputc函数
+ * @brief 重定义 fputc 函数
  */
 int fputc(int ch, FILE *f)
 {

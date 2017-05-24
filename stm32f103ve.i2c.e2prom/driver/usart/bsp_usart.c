@@ -42,7 +42,7 @@ void usart_init(void)
         USART_InitStructure.USART_Parity = USART_Parity_No;             // 设置不进行数据校验
         USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None; // 设置无硬件数据流控制
         USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx; // 设置为收发模式
-        USART_Init(USART1, &USART_InitStructure);                        // 初始化串口
+        USART_Init(USART1, &USART_InitStructure);                       // 初始化串口
 
         /* 第四步: 配置串口中断 */
         NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;

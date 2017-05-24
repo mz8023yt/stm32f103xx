@@ -1,14 +1,14 @@
 #include "bsp_usart.h"
 
 /**
- * USART_RX_STA: 软件虚拟的寄存器，用于控制字节流的接收
+ * USART_RX_STA: 软件虚拟的寄存器, 用于控制字节流的接收
  * USART_RX_STA[15]: 接收完成标志
  * USART_RX_STA[14]: 接收到0x0d
  * USART_RX_STA[13:0]: 接收到的有效字节数目
  */
 u16 USART_RX_STA = 0;
 
-/* 接收缓冲数组，最大接收USART_REC_LEN个字节 */
+/* 接收缓冲数组, 最大接收USART_REC_LEN个字节 */
 u8 USART_RX_BUF[USART_REC_LEN];
 
 /**
@@ -25,7 +25,7 @@ void usart_init(void)
         RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
         RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
 
-        /* 第二步: 配置串口对应的GPIO，设置为复用推挽输出 */
+        /* 第二步: 配置串口对应的GPIO, 设置为复用推挽输出 */
         GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
         GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -42,7 +42,7 @@ void usart_init(void)
         USART_InitStructure.USART_Parity = USART_Parity_No;             // 设置不进行数据校验
         USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None; // 设置无硬件数据流控制
         USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx; // 设置为收发模式
-        USART_Init(USART1, &USART_InitStructure);                        // 初始化串口
+        USART_Init(USART1, &USART_InitStructure);                       // 初始化串口
 
         /* 第四步: 配置串口中断 */
         NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
@@ -98,16 +98,15 @@ void USART1_IRQHandler(void)
                                         /* 如果当前接收到的是0x0d的话 */
                                         /* 则置位接收到0x0d的标志位 USART_RX_STA[14] */
                                         USART_RX_STA |= 0x4000;
-//                                        USART_RX_STA |= 0x8000;
                                 }
                                 else
                                 {
                                         /* 将当前接收到的值存入缓存数组中 */
                                         USART_RX_BUF[USART_RX_STA & 0X3FFF] = Res;
-
+                                        
                                         /* 接收到的字节个数加一 */
                                         USART_RX_STA++;
-
+                                        
                                         /* 判断接收到的数据有没有超过最开始设置的缓存区长度 */
                                         if(USART_RX_STA > (USART_REC_LEN - 1))
                                         {
@@ -139,7 +138,7 @@ void _sys_exit(int x)
 }
 
 /**
- * @brief 重定义fputc函数
+ * @brief 重定义 fputc 函数
  */
 int fputc(int ch, FILE *f)
 {

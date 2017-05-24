@@ -22,10 +22,10 @@ int main(void)
         at24c02_init();
         led_init();
         
+        printf("[stm32f10x][%s][%d]: please enter the cmd \r\n", __FUNCTION__, __LINE__);
+        
         while(1)
         {
-                
-                
                 /* 如果接收完了所有的字符(每一次串口中断接收一个字符) */
                 if (USART_RX_STA & 0x8000)
                 {
@@ -62,12 +62,14 @@ int main(void)
                                 // printf("[stm32f10x][%s][%d]: write the e2prom \r\n", __FUNCTION__, __LINE__);
                                 buffer[0] = data;
                                 at24c02_byte_write(address, buffer);
+                                printf("\r\n");
                         }
                         else if(!strcmp("read", cmd))
                         {
                                 // printf("[stm32f10x][%s][%d]: read the e2prom \r\n", __FUNCTION__, __LINE__);
                                 at24c02_random_read(address, buffer);
                                 printf("[stm32f10x][%s][%d]: %d address's data = %d\r\n", __FUNCTION__, __LINE__, address, buffer[0]);
+                                printf("\r\n");
                         }
                         else if(!strcmp("format", cmd))
                         {
@@ -83,6 +85,23 @@ int main(void)
                                         at24c02_page_write(address, &buffer[address], 8);
                                         delay_ms(5);
                                 }
+                                printf("\r\n");
+                        }
+                        else if(!strcmp("clear", cmd))
+                        {
+                                /* 在buffer中准备好数据 */
+                                for(i = 0; i < 256; i++)
+                                {
+                                        buffer[i] = 0;
+                                }
+                                
+                                for(i = 0; i < 32; i++)
+                                {
+                                        address = 8 * i;
+                                        at24c02_page_write(address, &buffer[address], 8);
+                                        delay_ms(5);
+                                }
+                                printf("\r\n");
                         }
                         else if(!strcmp("display", cmd))
                         {
@@ -94,6 +113,7 @@ int main(void)
                                         if(i % 16 == 15)
                                                 printf("\r\n");
                                 }
+                                printf("\r\n");
                         }
                         
                         /* 搞完事情后, 清空自定义的标志寄存器 */

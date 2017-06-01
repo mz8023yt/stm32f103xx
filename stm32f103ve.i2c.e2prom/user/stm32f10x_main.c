@@ -7,6 +7,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+void print_message(void);
+
 int main(void)
 {
         u8 buffer[8];
@@ -19,10 +21,10 @@ int main(void)
         NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
         systick_init();
         usart_init();
-        at24c02_init();
+        i2c_init();
         led_init();
         
-        printf("[stm32f10x][%s][%d]: please enter the cmd \r\n", __FUNCTION__, __LINE__);
+        print_message();
         
         while(1)
         {
@@ -33,45 +35,44 @@ int main(void)
                         length = USART_RX_STA & 0x3fff;
                         USART_RX_BUF[length] = '\0';
                         
-                        // printf("[stm32f10x][%s][%d]: %s \r\n", __FUNCTION__, __LINE__, (char *)USART_RX_BUF);
-                        
                         char* p;
+                        
+                        /* 解析出命令值 */
                         p = strtok((char*)USART_RX_BUF, " ");
                         if(p)
                         {
                                 cmd = p;
-                                // printf("[stm32f10x][%s][%d]: %s \r\n", __FUNCTION__, __LINE__, cmd);
                         }
                         
+                        /* 解析出第一个参数 */
                         p = strtok(NULL, " ");
                         if(p)
                         {
                                 address = atoi(p);
-                                // printf("[stm32f10x][%s][%d]: %d \r\n", __FUNCTION__, __LINE__, address);
                         }
                         
+                        /* 解析出第二个参数 */
                         p = strtok(NULL, " ");
                         if(p)
                         {
                                 data = atoi(p);
-                                // printf("[stm32f10x][%s][%d]: %d \r\n", __FUNCTION__, __LINE__, data);
                         }
                         
-                        if(!strcmp("write", cmd))
+                        /* 开始匹配命令 */
+                        if(!strcmp("write", cmd) || !strcmp("w", cmd))
                         {
-                                // printf("[stm32f10x][%s][%d]: write the e2prom \r\n", __FUNCTION__, __LINE__);
                                 buffer[0] = data;
                                 at24c02_byte_write(address, buffer);
-                                printf("\r\n");
+                                printf("write is successful\r\n");
+                                print_message();
                         }
-                        else if(!strcmp("read", cmd))
+                        else if(!strcmp("read", cmd) || !strcmp("r", cmd))
                         {
-                                // printf("[stm32f10x][%s][%d]: read the e2prom \r\n", __FUNCTION__, __LINE__);
                                 at24c02_random_read(address, buffer);
-                                printf("[stm32f10x][%s][%d]: %d address's data = %d\r\n", __FUNCTION__, __LINE__, address, buffer[0]);
-                                printf("\r\n");
+                                printf("[stm32f10x][%s][%d]: the %d address's data = %d\r\n", __FUNCTION__, __LINE__, address, buffer[0]);
+                                print_message();
                         }
-                        else if(!strcmp("format", cmd))
+                        else if(!strcmp("format", cmd) || !strcmp("f", cmd))
                         {
                                 /* 在buffer中准备好数据 */
                                 for(i = 0; i < 256; i++)
@@ -85,9 +86,10 @@ int main(void)
                                         at24c02_page_write(address, &buffer[address], 8);
                                         delay_ms(5);
                                 }
-                                printf("\r\n");
+                                printf("format is successful\r\n");
+                                print_message();
                         }
-                        else if(!strcmp("clear", cmd))
+                        else if(!strcmp("clear", cmd) || !strcmp("c", cmd))
                         {
                                 /* 在buffer中准备好数据 */
                                 for(i = 0; i < 256; i++)
@@ -101,9 +103,10 @@ int main(void)
                                         at24c02_page_write(address, &buffer[address], 8);
                                         delay_ms(5);
                                 }
-                                printf("\r\n");
+                                printf("clear is successful\r\n");
+                                print_message();
                         }
-                        else if(!strcmp("display", cmd))
+                        else if(!strcmp("display", cmd) || !strcmp("d", cmd))
                         {
                                 at24c02_set_current_address(0);
                                 at24c02_sequentia_read(buffer, 256);
@@ -113,11 +116,21 @@ int main(void)
                                         if(i % 16 == 15)
                                                 printf("\r\n");
                                 }
-                                printf("\r\n");
+                                print_message();
                         }
                         
                         /* 搞完事情后, 清空自定义的标志寄存器 */
                         USART_RX_STA = 0;
                 }
         }
+}
+
+void print_message(void)
+{
+        printf("\r\nplease enter the cmd:\r\n");
+        printf("    display(d): display the e2prom all address data.\r\n");
+        printf("    clear(c)  : write all address data to 0.\r\n");
+        printf("    format(f) : write all address data to 0-255.\r\n");
+        printf("    write(w)  : the specified address written to the specified value.\r\n");
+        printf("    read(r)   : read the value of the specified address.\r\n\r\n");
 }

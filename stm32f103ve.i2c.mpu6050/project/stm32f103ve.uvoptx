@@ -349,8 +349,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\driver\e2prom\bsp_at24c02.c</PathWithFileName>
-      <FilenameWithoutPath>bsp_at24c02.c</FilenameWithoutPath>
+      <PathWithFileName>..\driver\i2c\bsp_i2c.c</PathWithFileName>
+      <FilenameWithoutPath>bsp_i2c.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -361,8 +361,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\driver\i2c\bsp_i2c.c</PathWithFileName>
-      <FilenameWithoutPath>bsp_i2c.c</FilenameWithoutPath>
+      <PathWithFileName>..\driver\mpu\bsp_mpu6050.c</PathWithFileName>
+      <FilenameWithoutPath>bsp_mpu6050.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

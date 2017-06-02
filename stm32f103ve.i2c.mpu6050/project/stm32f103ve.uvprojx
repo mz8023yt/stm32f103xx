@@ -335,7 +335,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD, USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\startup;..\library\inc;..\user;..\driver\led;..\driver\systick;..\driver\usart;..\driver\e2prom;..\driver\i2c</IncludePath>
+              <IncludePath>..\startup;..\library\inc;..\user;..\driver\led;..\driver\systick;..\driver\usart;..\driver\i2c;..\driver\mpu</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -455,14 +455,14 @@
               <FilePath>..\driver\usart\bsp_usart.c</FilePath>
             </File>
             <File>
-              <FileName>bsp_at24c02.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\driver\e2prom\bsp_at24c02.c</FilePath>
-            </File>
-            <File>
               <FileName>bsp_i2c.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\driver\i2c\bsp_i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_mpu6050.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\driver\mpu\bsp_mpu6050.c</FilePath>
             </File>
           </Files>
         </Group>

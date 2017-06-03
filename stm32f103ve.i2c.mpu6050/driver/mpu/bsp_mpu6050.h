@@ -367,10 +367,9 @@ void mpu6050_read_angular_acceleration(short *gyroData);
 void mpu6050_read_acceleration(short *accData);
 void mpu6050_transform_temperature(float *Temperature);
 void mpu6050_init(void);
-void PMU6050_ReadData(u8 reg_add,unsigned char*Read,u8 num);
-void PMU6050_WriteReg(u8 reg_add,u8 reg_dat);
+void PMU6050_ReadData(u8 reg_add, unsigned char*Read, u8 num);
+void PMU6050_WriteReg(u8 reg_add, u8 reg_dat);
 void MPU6050_PWR_MGMT_1_INIT(void);
-
-u8 mpu6050_read_id(void);
+int mpu6050_read_id(void);
 
 #endif  /*__MPU6050*/

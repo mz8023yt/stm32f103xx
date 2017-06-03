@@ -66,12 +66,14 @@ int main(void)
                                 printf("write is successful\r\n");
                                 print_message();
                         }
+                        /* 读取指定地址的值 */
                         else if(!strcmp("read", cmd) || !strcmp("r", cmd))
                         {
                                 at24c02_random_read(address, buffer);
                                 printf("[stm32f10x][%s][%d]: the %d address's data = %d\r\n", __FUNCTION__, __LINE__, address, buffer[0]);
                                 print_message();
                         }
+                        /* 格式化 e2prom 中的数据 */
                         else if(!strcmp("format", cmd) || !strcmp("f", cmd))
                         {
                                 /* 在buffer中准备好数据 */
@@ -89,6 +91,7 @@ int main(void)
                                 printf("format is successful\r\n");
                                 print_message();
                         }
+                        /* 将 e2prom 中的数据全部清零 */
                         else if(!strcmp("clear", cmd) || !strcmp("c", cmd))
                         {
                                 /* 在buffer中准备好数据 */
@@ -106,16 +109,31 @@ int main(void)
                                 printf("clear is successful\r\n");
                                 print_message();
                         }
+                        /* 显示 e2prom 所有地址的数据 */
                         else if(!strcmp("display", cmd) || !strcmp("d", cmd))
                         {
                                 at24c02_set_current_address(0);
                                 at24c02_sequentia_read(buffer, 256);
+                                
+                                /* 打印提示信息 */
+                                printf("\r\n\t");
+                                for(i = 0; i < 16; i++)
+                                {
+                                        printf("col %d\t", i);
+                                }
+                                printf("\r\n");
+                                
+                                printf("1\t");
                                 for(i = 0; i < 256; i++)
                                 {
-                                        printf("%d\t", buffer[i]);
-                                        if(i % 16 == 15)
+                                        printf(" %d\t", buffer[i]);
+                                        if(i % 16 == 15 && i < 255)
+                                        {
                                                 printf("\r\n");
+                                                printf("%d\t", i + 1);
+                                        }
                                 }
+                                printf("\r\n");
                                 print_message();
                         }
                         
@@ -127,10 +145,11 @@ int main(void)
 
 void print_message(void)
 {
-        printf("\r\nplease enter the cmd:\r\n");
+        printf("\r\nplease enter the cmd: the cmd end of new line symbol(\\r\\n)\r\n");
         printf("    display(d): display the e2prom all address data.\r\n");
         printf("    clear(c)  : write all address data to 0.\r\n");
         printf("    format(f) : write all address data to 0-255.\r\n");
         printf("    write(w)  : the specified address written to the specified value.\r\n");
-        printf("    read(r)   : read the value of the specified address.\r\n\r\n");
+        printf("    read(r)   : read the value of the specified address.\r\n");
+        printf("\r\n");
 }

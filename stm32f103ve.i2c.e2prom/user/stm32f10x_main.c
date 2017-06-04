@@ -136,6 +136,11 @@ int main(void)
                                 printf("\r\n");
                                 print_message();
                         }
+                        else
+                        {
+                                printf("cmd is error, please enter the cmd again.\r\n");
+                                print_message();
+                        }
                         
                         /* 搞完事情后, 清空自定义的标志寄存器 */
                         USART_RX_STA = 0;

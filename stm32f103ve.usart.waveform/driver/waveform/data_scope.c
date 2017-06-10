@@ -1,4 +1,6 @@
 #include "data_scope.h"
+#include <stdarg.h>
+#include <string.h>
 
 /* 串口发送的数据帧的帧缓冲区 */
 u8 data_scope_buffer[42] = {0};
@@ -49,4 +51,32 @@ int data_scope_ready_to_send(u8 channel)
         }
         
         return -1;
+}
+
+/**
+ * @brief 发送波形数据到上位机
+ * @param num 同时发送的通道数
+ * @return ... 每一个通道的波形数据公式
+ */
+void data_scope_wave(int num, ... )
+{
+        int i;
+        int length;
+        va_list list;                                   /* 定义保存函数参数的结构 */    
+        float param;                                    /* 存放取出的字符串参数 */    
+        va_start(list, num);                            /* list 指向传入的第一个可选参数, num 是最后一个确定的参数 */
+        
+        for(i = 1; i <= num ; i++)
+        {
+                param = va_arg(list, double);           /* 取出当前的参数 */
+                data_scope_write_buffer(i, param);
+        }
+        va_end(list);                                   /* 将 list 置为 NULL */
+        length = data_scope_ready_to_send(num);
+        
+        for(i = 0; i < length; i++)                     /* 通过查询的方式发送数据帧 */
+        {
+                while ((USART1->SR & 0x40) == 0);
+                USART1->DR = data_scope_buffer[i];
+        }
 }

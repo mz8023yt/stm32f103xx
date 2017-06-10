@@ -335,7 +335,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD, USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\startup;..\library\inc;..\user;..\driver\led;..\driver\systick;..\driver\usart</IncludePath>
+              <IncludePath>..\startup;..\library\inc;..\user;..\driver\led;..\driver\systick;..\driver\usart;..\driver\waveform</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -453,6 +453,11 @@
               <FileName>bsp_usart.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\driver\usart\bsp_usart.c</FilePath>
+            </File>
+            <File>
+              <FileName>mini_balance.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\driver\waveform\mini_balance.c</FilePath>
             </File>
           </Files>
         </Group>

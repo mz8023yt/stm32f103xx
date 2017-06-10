@@ -1,9 +1,11 @@
 #ifndef __DATA_PRTOCOL_H
 #define __DATA_PRTOCOL_H
 
-extern unsigned char DataScope_OutPut_Buffer[42];                       //待发送帧数据缓存区
+#include "stm32f10x.h"
 
-void DataScope_Get_Channel_Data(float Data,unsigned char Channel);      // 写通道数据至待发送帧数据缓存区
-unsigned char DataScope_Data_Generate(unsigned char Channel_Number);    // 发送帧数据生成函数 
+extern u8 mini_balance_buffer[42];                              // 待发送帧数据缓存区
+
+void mini_balance_write_buffer(u8 channel, float data);         // 写通道数据至待发送帧数据缓存区
+int mini_balance_ready_to_send(u8 channel);                     // 发送帧数据生成函数
 
 #endif 

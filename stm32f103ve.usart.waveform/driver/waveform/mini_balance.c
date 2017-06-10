@@ -1,116 +1,52 @@
 #include "mini_balance.h"
 
-unsigned char DataScope_OutPut_Buffer[42] = {0};        //串口发送缓冲区
+/* 串口发送的数据帧的帧缓冲区 */
+u8 mini_balance_buffer[42] = {0};
 
-//函数说明：将单精度浮点数据转成4字节数据并存入指定地址 
-//附加说明：用户无需直接操作此函数 
-//target:目标单精度数据
-//buf:待写入数组
-//beg:指定从数组第几个元素开始写入
-//函数无返回 
-void Float2Byte(float *target, unsigned char *buf, unsigned char beg)
+/**
+ * @brief 将单精度浮点数据转成 4 字节数据并存入指定地址
+ * @param target 传入的单精度浮点数, 上位机显示的就是它
+ * @param buffer 将但精度浮点数转化后保存在此 buffer 中
+ * @param begin  指定保存在 buffer 中的位置
+ * @return null
+ */
+void mini_balance_float_to_byte(float *target, u8 *buffer, u8 begin)
 {
-        unsigned char *point;
-        point = (unsigned char*) target; //得到float的地址
-        buf[beg] = point[0];
-        buf[beg + 1] = point[1];
-        buf[beg + 2] = point[2];
-        buf[beg + 3] = point[3];
+        /* 得到 float 数据的首地址 */
+        u8 *point = (u8*) target;
+        buffer[begin] = point[0];
+        buffer[begin + 1] = point[1];
+        buffer[begin + 2] = point[2];
+        buffer[begin + 3] = point[3];
 }
 
-//函数说明：将待发送通道的单精度浮点数据写入发送缓冲区
-//Data：通道数据
-//Channel：选择通道（1-10）
-//函数无返回 
-void DataScope_Get_Channel_Data(float Data, unsigned char Channel)
+/**
+ * @brief 将待发送通道的单精度浮点数据写入发送缓冲区
+ * @param channel 指定此但精度浮点数对应的显示通道 (1 - 10)
+ * @param data 传入的单精度浮点数, 上位机显示的就是它
+ * @return null
+ * @note mini balance 上位机最多支持 10 个通道
+ */
+void mini_balance_write_buffer(u8 channel, float data)
 {
-        if ((Channel > 10) || (Channel == 0))
-                return;  //通道个数大于10或等于0，直接跳出，不执行函数
-        else
-        {
-                switch (Channel)
-                {
-                case 1:
-                        Float2Byte(&Data, DataScope_OutPut_Buffer, 1);
-                        break;
-                case 2:
-                        Float2Byte(&Data, DataScope_OutPut_Buffer, 5);
-                        break;
-                case 3:
-                        Float2Byte(&Data, DataScope_OutPut_Buffer, 9);
-                        break;
-                case 4:
-                        Float2Byte(&Data, DataScope_OutPut_Buffer, 13);
-                        break;
-                case 5:
-                        Float2Byte(&Data, DataScope_OutPut_Buffer, 17);
-                        break;
-                case 6:
-                        Float2Byte(&Data, DataScope_OutPut_Buffer, 21);
-                        break;
-                case 7:
-                        Float2Byte(&Data, DataScope_OutPut_Buffer, 25);
-                        break;
-                case 8:
-                        Float2Byte(&Data, DataScope_OutPut_Buffer, 29);
-                        break;
-                case 9:
-                        Float2Byte(&Data, DataScope_OutPut_Buffer, 33);
-                        break;
-                case 10:
-                        Float2Byte(&Data, DataScope_OutPut_Buffer, 37);
-                        break;
-                }
-        }
+        if ((channel >= 1) && (channel <= 10))
+                mini_balance_float_to_byte(&data, mini_balance_buffer, 4 * channel - 3);
 }
 
-//函数说明：生成 DataScopeV1.0 能正确识别的帧格式
-//Channel_Number，需要发送的通道个数
-//返回发送缓冲区数据个数
-//返回0表示帧格式生成失败 
-unsigned char DataScope_Data_Generate(unsigned char Channel_Number)
+/**
+ * @brief 生成 mini balance 上位机能正确识别的帧格式
+ * @param channel 指定本次格式化帧中使用到了多少个通道 (1 - 10)
+ * @return succed: 发送缓冲区数据个数 fail: -1
+ */
+int mini_balance_ready_to_send(u8 channel)
 {
-        if ((Channel_Number > 10) || (Channel_Number == 0))
+        if ((channel >= 1) && (channel <= 10))
         {
-                return 0;
-        }  //通道个数大于10或等于0，直接跳出，不执行函数
-        else
-        {
-                DataScope_OutPut_Buffer[0] = '$';  //帧头
-                                
-                switch (Channel_Number)
-                {
-                case 1:
-                        DataScope_OutPut_Buffer[5] = 5;
-                        return 6;
-                case 2:
-                        DataScope_OutPut_Buffer[9] = 9;
-                        return 10;
-                case 3:
-                        DataScope_OutPut_Buffer[13] = 13;
-                        return 14;
-                case 4:
-                        DataScope_OutPut_Buffer[17] = 17;
-                        return 18;
-                case 5:
-                        DataScope_OutPut_Buffer[21] = 21;
-                        return 22;
-                case 6:
-                        DataScope_OutPut_Buffer[25] = 25;
-                        return 26;
-                case 7:
-                        DataScope_OutPut_Buffer[29] = 29;
-                        return 30;
-                case 8:
-                        DataScope_OutPut_Buffer[33] = 33;
-                        return 34;
-                case 9:
-                        DataScope_OutPut_Buffer[37] = 37;
-                        return 38;
-                case 10:
-                        DataScope_OutPut_Buffer[41] = 41;
-                        return 42;
-                }
+                /* 一帧数据帧以 $ 符号开始 */
+                mini_balance_buffer[0] = '$';
+                mini_balance_buffer[4 * channel + 1] = 4 * channel + 1;
+                return (4 * channel + 2);
         }
-        return 0;
+        
+        return -1;
 }

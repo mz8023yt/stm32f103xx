@@ -437,6 +437,16 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>proting</GroupName>
+          <Files>
+            <File>
+              <FileName>data_scope.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\driver\waveform\data_scope.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>driver</GroupName>
           <Files>
             <File>
@@ -453,11 +463,6 @@
               <FileName>bsp_usart.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\driver\usart\bsp_usart.c</FilePath>
-            </File>
-            <File>
-              <FileName>mini_balance.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\driver\waveform\mini_balance.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -1,5 +1,9 @@
 #include "bsp_led.h"
 
+/**
+ * @brief 初始化板载三色 LED
+ * @return null
+ */
 void led_init(void)
 {
         GPIO_InitTypeDef GPIO_InitStructure;
@@ -54,6 +58,11 @@ void led_init(void)
         TIM_Cmd(TIM3, ENABLE);                                          // 使能定时器
 }
 
+/**
+ * @brief 三色 LED 亮不同的颜色值
+ * @param rgb 24 位颜色值
+ * @return null
+ */
 void led_light_color(u32 rgb)
 {
         TIM3->CCR2 = (uint8_t)(rgb >> 16);                              // R

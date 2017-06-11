@@ -49,11 +49,11 @@ void usart_init(void)
         NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
         NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;
         NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-        NVIC_Init( &NVIC_InitStructure);
+        NVIC_Init(&NVIC_InitStructure);
 
         /* 第五步: 开启串口中断 */
         USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
-        
+
         /* 第六步: 使能串口 */
         USART_Cmd(USART1, ENABLE);
 }
@@ -67,19 +67,19 @@ void USART1_IRQHandler(void)
         u8 Res;
 
         /* 判断是不是接收中断, 如果是接收中断, 执行 if 里面的代码 */
-        if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
+        if (USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
         {
                 /* 读取串口1接收到的数据 */
                 Res = USART_ReceiveData(USART1);
 
                 /* 接收未完成, 这里接收的是一大串字节 */
-                if((USART_RX_STA & 0x8000) == 0)
+                if ((USART_RX_STA & 0x8000) == 0)
                 {
                         /* 判断前一个接收的是不是 0x0d */
-                        if(USART_RX_STA & 0x4000)
+                        if (USART_RX_STA & 0x4000)
                         {
                                 /* 如果前一个字节收到0x0d的话, 再接收一个字节 */
-                                if(Res != 0x0a)
+                                if (Res != 0x0a)
                                 {
                                         /* 如果在接收的不是到0x0a, 接收错误, 重新开始 */
                                         USART_RX_STA = 0;
@@ -93,7 +93,7 @@ void USART1_IRQHandler(void)
                         else
                         {
                                 /* 如果前一个字节还没收到0x0d的话, 就接着接收下一个字节 */
-                                if(Res == 0x0d)
+                                if (Res == 0x0d)
                                 {
                                         /* 如果当前接收到的是0x0d的话 */
                                         /* 则置位接收到0x0d的标志位 USART_RX_STA[14] */
@@ -103,12 +103,12 @@ void USART1_IRQHandler(void)
                                 {
                                         /* 将当前接收到的值存入缓存数组中 */
                                         USART_RX_BUF[USART_RX_STA & 0X3FFF] = Res;
-                                        
+
                                         /* 接收到的字节个数加一 */
                                         USART_RX_STA++;
-                                        
+
                                         /* 判断接收到的数据有没有超过最开始设置的缓存区长度 */
-                                        if(USART_RX_STA > (USART_REC_LEN - 1))
+                                        if (USART_RX_STA > (USART_REC_LEN - 1))
                                         {
                                                 /* 如果超出范围, 表明接收数据错误, 重新开始接收 */
                                                 USART_RX_STA = 0;
@@ -143,8 +143,9 @@ void _sys_exit(int x)
 int fputc(int ch, FILE *f)
 {
         /* 循环发送, 直到发送完毕 */
-        while((USART1->SR & 0x40) == 0)
+        while ((USART1->SR & 0x40) == 0)
         {
+
         }
 
         /* 装载要发送的数据 */

@@ -45,7 +45,7 @@ void delay_us(u32 nus)
         do
         {
                 temp = SysTick->CTRL;
-        }while((temp & 0x01) && !(temp & (1 << 16)));
+        } while ((temp & 0x01) && !(temp & (1 << 16)));
 
         /* 关闭滴答定时器 */
         SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
@@ -67,7 +67,7 @@ static void delay_xms(u16 nms)
         do
         {
                 temp = SysTick->CTRL;
-        }while((temp & 0x01) && !(temp & (1 << 16)));
+        } while ((temp & 0x01) && !(temp & (1 << 16)));
         SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
         SysTick->VAL = 0X00;
 }
@@ -82,13 +82,13 @@ void delay_ms(u16 nms)
         u8 repeat = nms / 1500;
         u16 remain = nms % 1500;
 
-        while(repeat)
+        while (repeat)
         {
                 delay_xms(1500);
                 repeat--;
         }
 
-        if(remain)
+        if (remain)
         {
                 delay_xms(remain);
         }

@@ -17,9 +17,10 @@ int main(void)
                 a += 0.1;
                 if (a > 3.14)
                         a = -3.14;
-                
-                data_scope_wave(2, a + 5, sin(a));
-                
-                delay_ms(50); 
+
+                /* 绘制正弦波 */
+                data_scope_wave(1, sin(a));
+
+                delay_ms(50);
         }
 }

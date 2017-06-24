@@ -34,8 +34,6 @@ typedef struct
 /* 外部声明 I2C 总线结构, 其他文件包含此头文件就可以直接拿到 I2C 总线结构对象 */
 extern I2C_BusDef i2c_bus_1;
 
-#define WP PBout(7)
-
 void i2c_init(void);
 void i2c_bus_init(I2C_BusDef* I2Cx);
 void i2c_set_sda_input(I2C_BusDef* I2Cx);

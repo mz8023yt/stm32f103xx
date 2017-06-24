@@ -15,18 +15,21 @@ int main(void)
         i2c_init();
         led_init();
         
-        WP = OFF;
-        
-        buffer[0] = 18;
-        at24c256_byte_write(0x1020, buffer);
+        buffer[0] = 120;
+        at24c256_byte_write(0x1000, buffer);
         printf("[%s][%s][%d]: write successful\r\n", __FILE__, __FUNCTION__, __LINE__);
         
         buffer[0] = 200;
-        at24c02_random_read(0x1020, buffer);
+        at24c02_random_read(0x1000, buffer);
         printf("[%s][%s][%d]: data = %d\r\n", __FILE__, __FUNCTION__, __LINE__, buffer[0]);
+        
         
         while(1)
         {
+                LED = ON;
+                delay_ms(100);
                 
+                LED = OFF;
+                delay_ms(900);
         }
 }

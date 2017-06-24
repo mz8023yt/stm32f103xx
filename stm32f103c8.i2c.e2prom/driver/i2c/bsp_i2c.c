@@ -8,15 +8,6 @@ I2C_BusDef i2c_bus_1;
 /* 初始化 I2C 总线 */
 void i2c_init(void)
 {
-        GPIO_InitTypeDef GPIO_InitStructure;
-
-        RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
-
-        GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
-        GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-        GPIO_Init(GPIOB, &GPIO_InitStructure);
-        
         i2c_bus_1.scl_gpio_port = GPIOB;
         i2c_bus_1.scl_gpio_pin = GPIO_Pin_8;
         i2c_bus_1.sda_gpio_port = GPIOB;

@@ -4,8 +4,8 @@
 #include "stm32f10x.h"
 
 #define LED     PCout(13)
-#define ON      1
-#define OFF     0
+#define ON      0
+#define OFF     1
 
 void led_init(void);
 

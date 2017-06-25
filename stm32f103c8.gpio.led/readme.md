@@ -30,11 +30,15 @@
 ## 软件资源
 
 - MDK-ARM v5.22
-![image]()
+
+![image](https://github.com/mz8023yt/stm32f103/blob/master/image.stm32f103c8/MDK-ARM.png)
+
 ## 硬件资源
 
 - stm32f103c8t6 最小系统
-![image]()
+
+![image](https://github.com/mz8023yt/stm32f103/blob/master/image.stm32f103c8/stm32f103c8t6.png)
+
 - Micro-USB 供电线
 - J-Link / ST-Link / DAP-ISP / USB-ISP 下载器
 

@@ -17,9 +17,24 @@
 
 # stm32f103c8t6 核心板 - 工程模板
 
+## 创建工程步骤
+
 1. 复制一份指南者的工程, 重命名为 stm32f103c8.gpio.led
 2. 修改工程 device 为 stm32f103c8
 3. 修改宏定义 STM32F10X_HD 为 STM32F10X_MD
 4. 更换启动文件 startup_stm32f10x_md.s
 5. 配置 DAP 或者 JLINK 下载
 6. 修改其中的 bsp_led 驱动文件, 配置 PC13 为输出, 并通过位带抛出 LED 接口
+
+
+## 软件资源
+
+- MDK-ARM v5.22
+![image]()
+## 硬件资源
+
+- stm32f103c8t6 最小系统
+![image]()
+- Micro-USB 供电线
+- J-Link / ST-Link / DAP-ISP / USB-ISP 下载器
+

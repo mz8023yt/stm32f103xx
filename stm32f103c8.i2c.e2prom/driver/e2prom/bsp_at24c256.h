@@ -16,6 +16,6 @@ int at24c256_set_current_address(u8 address);
 int at24c256_byte_write(u16 address, u8* buffer);
 int at24c256_page_write(u16 address, u8* buffer, u8 length);
 int at24c256_current_address_read(u8* buffer);
-int at24c02_random_read(u16 address, u8* buffer);
+int at24c256_random_read(u16 address, u8* buffer);
 
 #endif /* __BSP_at24c256_H */

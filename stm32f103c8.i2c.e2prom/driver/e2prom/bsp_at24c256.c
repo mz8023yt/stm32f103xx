@@ -37,20 +37,20 @@ int at24c256_set_current_address(u8 address)
         i2c_send_byte(&i2c_bus_1, AT24C256_WRITE);
         if(i2c_wait_response(&i2c_bus_1))
         {
-                printf("[%s][%s][%d]: device address mapping fail\r\n", __FILE__, __FUNCTION__, __LINE__);
+                printf("[%s][%s][%d]:\r\ndevice address mapping fail\r\n\r\n", __FILE__, __FUNCTION__, __LINE__);
                 return -1;
         }
 
         i2c_send_byte(&i2c_bus_1, address_high);
         if(i2c_wait_response(&i2c_bus_1))
         {
-                printf("[%s][%s][%d]: write address fail\r\n", __FILE__, __FUNCTION__, __LINE__);
+                printf("[%s][%s][%d]:\r\nwrite address fail\r\n\r\n", __FILE__, __FUNCTION__, __LINE__);
                 return -1;
         }
         i2c_send_byte(&i2c_bus_1, address_low);
         if(i2c_wait_response(&i2c_bus_1))
         {
-                printf("[%s][%s][%d]: write address fail\r\n", __FILE__, __FUNCTION__, __LINE__);
+                printf("[%s][%s][%d]:\r\nwrite address fail\r\n\r\n", __FILE__, __FUNCTION__, __LINE__);
                 return -1;
         }
 
@@ -79,27 +79,27 @@ int at24c256_byte_write(u16 address, u8* buffer)
         i2c_send_byte(&i2c_bus_1, AT24C256_WRITE);
         if(i2c_wait_response(&i2c_bus_1))
         {
-                printf("[%s][%s][%d]: device address mapping fail\r\n", __FILE__, __FUNCTION__, __LINE__);
+                printf("[%s][%s][%d]:\r\ndevice address mapping fail\r\n\r\n", __FILE__, __FUNCTION__, __LINE__);
                 return -1;
         }
 
         i2c_send_byte(&i2c_bus_1, address_high);
         if(i2c_wait_response(&i2c_bus_1))
         {
-                printf("[%s][%s][%d]: write address fail\r\n", __FILE__, __FUNCTION__, __LINE__);
+                printf("[%s][%s][%d]:\r\nwrite address fail\r\n\r\n", __FILE__, __FUNCTION__, __LINE__);
                 return -1;
         }
         i2c_send_byte(&i2c_bus_1, address_low);
         if(i2c_wait_response(&i2c_bus_1))
         {
-                printf("[%s][%s][%d]: write address fail\r\n", __FILE__, __FUNCTION__, __LINE__);
+                printf("[%s][%s][%d]:\r\nwrite address fail\r\n\r\n", __FILE__, __FUNCTION__, __LINE__);
                 return -1;
         }
 
         i2c_send_byte(&i2c_bus_1, *buffer);
         if(i2c_wait_response(&i2c_bus_1))
         {
-                printf("[%s][%s][%d]: write data fail\r\n", __FILE__, __FUNCTION__, __LINE__);
+                printf("[%s][%s][%d]:\r\nwrite data fail\r\n\r\n", __FILE__, __FUNCTION__, __LINE__);
                 i2c_stop(&i2c_bus_1);
                 return -1;
         }
@@ -127,27 +127,27 @@ int at24c256_page_write(u16 address, u8* buffer, u8 length)
 
         if((length <= 0) || (length > 64))
         {
-                printf("[%s][%s][%d]: length parameter values are not specification\r\n", __FILE__, __FUNCTION__, __LINE__);
+                printf("[%s][%s][%d]:\r\nlength parameter values are not specification\r\n\r\n", __FILE__, __FUNCTION__, __LINE__);
                 return -1;
         }
 
         i2c_send_byte(&i2c_bus_1, AT24C256_WRITE);
         if(i2c_wait_response(&i2c_bus_1))
         {
-                printf("[%s][%s][%d]: device address mapping fail\r\n", __FILE__, __FUNCTION__, __LINE__);
+                printf("[%s][%s][%d]:\r\ndevice address mapping fail\r\n\r\n", __FILE__, __FUNCTION__, __LINE__);
                 return -1;
         }
 
         i2c_send_byte(&i2c_bus_1, address_high);
         if(i2c_wait_response(&i2c_bus_1))
         {
-                printf("[%s][%s][%d]: write address fail\r\n", __FILE__, __FUNCTION__, __LINE__);
+                printf("[%s][%s][%d]:\r\nwrite address fail\r\n\r\n", __FILE__, __FUNCTION__, __LINE__);
                 return -1;
         }
         i2c_send_byte(&i2c_bus_1, address_low);
         if(i2c_wait_response(&i2c_bus_1))
         {
-                printf("[%s][%s][%d]: write address fail\r\n", __FILE__, __FUNCTION__, __LINE__);
+                printf("[%s][%s][%d]:\r\nwrite address fail\r\n\r\n", __FILE__, __FUNCTION__, __LINE__);
                 return -1;
         }
 
@@ -156,7 +156,7 @@ int at24c256_page_write(u16 address, u8* buffer, u8 length)
                 i2c_send_byte(&i2c_bus_1, buffer[i]);
                 if(i2c_wait_response(&i2c_bus_1))
                 {
-                        printf("[%s][%s][%d]: write data error at %d\r\n", __FILE__, __FUNCTION__, __LINE__, i);
+                        printf("[%s][%s][%d]:\r\nwrite data error at %d\r\n\r\n", __FILE__, __FUNCTION__, __LINE__, i);
                         return -1;
                 }
         }
@@ -179,7 +179,7 @@ int at24c256_current_address_read(u8* buffer)
         i2c_send_byte(&i2c_bus_1, AT24C256_READ);
         if(i2c_wait_response(&i2c_bus_1))
         {
-                printf("[%s][%s][%d]: device address mapping fail\r\n", __FILE__, __FUNCTION__, __LINE__);
+                printf("[%s][%s][%d]:\r\ndevice address mapping fail\r\n\r\n", __FILE__, __FUNCTION__, __LINE__);
                 return -1;
         }
 
@@ -198,7 +198,7 @@ int at24c256_current_address_read(u8* buffer)
  * @param buffer 保存读取到的数据的缓存区
  * @return int 返回程序执行的状态
  */
-int at24c02_random_read(u16 address, u8* buffer)
+int at24c256_random_read(u16 address, u8* buffer)
 {
         AT24C256_WP = WP_ENABLE;
         u8 address_high = (u8)((address >> 8) & 0x00ff);
@@ -209,20 +209,20 @@ int at24c02_random_read(u16 address, u8* buffer)
         i2c_send_byte(&i2c_bus_1, AT24C256_WRITE);
         if(i2c_wait_response(&i2c_bus_1))
         {
-                printf("[%s][%s][%d]: device address mapping fail\r\n", __FILE__, __FUNCTION__, __LINE__);
+                printf("[%s][%s][%d]:\r\ndevice address mapping fail\r\n\r\n", __FILE__, __FUNCTION__, __LINE__);
                 return -1;
         }
 
         i2c_send_byte(&i2c_bus_1, address_high);
         if(i2c_wait_response(&i2c_bus_1))
         {
-                printf("[%s][%s][%d]: write address fail\r\n", __FILE__, __FUNCTION__, __LINE__);
+                printf("[%s][%s][%d]:\r\nwrite address fail\r\n\r\n", __FILE__, __FUNCTION__, __LINE__);
                 return -1;
         }
         i2c_send_byte(&i2c_bus_1, address_low);
         if(i2c_wait_response(&i2c_bus_1))
         {
-                printf("[%s][%s][%d]: write address fail\r\n", __FILE__, __FUNCTION__, __LINE__);
+                printf("[%s][%s][%d]:\r\nwrite address fail\r\n\r\n", __FILE__, __FUNCTION__, __LINE__);
                 return -1;
         }
         AT24C256_WP = WP_ENABLE;

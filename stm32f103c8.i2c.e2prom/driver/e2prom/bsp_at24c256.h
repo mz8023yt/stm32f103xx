@@ -1,5 +1,5 @@
-#ifndef __BSP_at24c256_H
-#define __BSP_at24c256_H
+#ifndef __BSP_AT24C256_H
+#define __BSP_AT24C256_H
 
 #include "stm32f10x.h"
 
@@ -18,4 +18,4 @@ int at24c256_page_write(u16 address, u8* buffer, u8 length);
 int at24c256_current_address_read(u8* buffer);
 int at24c256_random_read(u16 address, u8* buffer);
 
-#endif /* __BSP_at24c256_H */
+#endif /* __BSP_AT24C256_H */

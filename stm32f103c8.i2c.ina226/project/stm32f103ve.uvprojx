@@ -335,7 +335,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD, USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\startup;..\library\inc;..\user;..\driver\led;..\driver\systick;..\driver\usart;..\driver\i2c;..\driver\e2prom;..\driver\ina226</IncludePath>
+              <IncludePath>..\startup;..\library\inc;..\user;..\driver\led;..\driver\systick;..\driver\usart;..\driver\i2c;..\driver\ina226</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -453,11 +453,6 @@
               <FileName>bsp_i2c.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\driver\i2c\bsp_i2c.c</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_at24c256.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\driver\e2prom\bsp_at24c256.c</FilePath>
             </File>
             <File>
               <FileName>bsp_ina226.c</FileName>

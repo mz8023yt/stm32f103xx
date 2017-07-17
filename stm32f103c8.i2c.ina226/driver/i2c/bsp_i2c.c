@@ -60,7 +60,7 @@ void i2c_bus_init(I2C_BusDef* i2c_bus_x)
         i2c_bus_x->sda = (volatile unsigned long*) BITBAND((u32)(i2c_bus_x->sda_gpio_port) + 12, i2c_bus_x->sda_pin_number);
         i2c_bus_x->REC = (volatile unsigned long*) BITBAND((u32)(i2c_bus_x->sda_gpio_port) + 8, i2c_bus_x->sda_pin_number);
         
-        i2c_bus_x->speed = 2;
+        i2c_bus_x->speed = 10;
         
         /* 数据线和时钟线默认都是高电平 */
         *(i2c_bus_x->scl) = 1;

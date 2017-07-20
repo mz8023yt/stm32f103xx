@@ -15,7 +15,7 @@ int main(void)
         oled_init();
         oled_display_on();
         oled_draw_rectangle(20, 40, 60, 60, 1);
-        OLED_Refresh_Gram();
+        oled_refresh_gram();
         
         while(1)
         {

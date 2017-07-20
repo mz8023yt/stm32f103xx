@@ -19,75 +19,75 @@
 //[7]0 1 2 3 ... 127
 u8 OLED_GRAM[128][8];
 
-void OLED_Refresh_Gram(void)
+void oled_refresh_gram(void)
 {
         u8 i,n;
         for(i=0;i<8;i++)
         {
-                OLED_WR_Byte (0xb0 + i);
-                OLED_WR_Byte (0x00);
-                OLED_WR_Byte (0x10);
+                oled_write_cmd (0xb0 + i);
+                oled_write_cmd (0x00);
+                oled_write_cmd (0x10);
                 for(n=0;n<128;n++)
                         oled_write_dat(OLED_GRAM[n][i]);
         }
 }
 
-void OLED_WR_Byte(u8 cmd)
+void oled_write_cmd(u8 cmd)
 {
         u8 i;
-        OLED_RS_Clr();
+        OLED_RS = 0;
         for(i=0;i<8;i++)
         {
-                OLED_SCLK_Clr();
+                OLED_SCLK = 0;
                 if(cmd&0x80)
-                   OLED_SDIN_Set();
+                   OLED_SDIN = 1;
                 else
-                   OLED_SDIN_Clr();
-                OLED_SCLK_Set();
+                   OLED_SDIN = 0;
+                OLED_SCLK = 1;
                 cmd<<=1;
         }
-        OLED_RS_Set();
+        OLED_RS = 1;
 }
 
 void oled_write_dat(u8 dat)
 {
         u8 i;
-        OLED_RS_Set();
+        OLED_RS = 1;
         for(i=0;i<8;i++)
         {
-                OLED_SCLK_Clr();
+                OLED_SCLK = 0;
                 if(dat&0x80)
-                   OLED_SDIN_Set();
+                   OLED_SDIN = 1;
                 else
-                   OLED_SDIN_Clr();
-                OLED_SCLK_Set();
+                   OLED_SDIN = 0;
+                OLED_SCLK = 1;
                 dat<<=1;
         }
-        OLED_RS_Set();
+        OLED_RS = 1;
 }
 
 void oled_display_on(void)
 {
-        OLED_WR_Byte(0X8D);
-        OLED_WR_Byte(0X14);
-        OLED_WR_Byte(0XAF);
+        oled_write_cmd(0X8D);
+        oled_write_cmd(0X14);
+        oled_write_cmd(0XAF);
 }
 
-void OLED_Display_Off(void)
+void oled_display_off(void)
 {
-        OLED_WR_Byte(0X8D);
-        OLED_WR_Byte(0X10);
-        OLED_WR_Byte(0XAE);
+        oled_write_cmd(0X8D);
+        oled_write_cmd(0X10);
+        oled_write_cmd(0XAE);
 }
 
-void OLED_Clear(void)
+void oled_clear_screen(void)
 {
         u8 i,n;
         for(i=0;i<8;i++)for(n=0;n<128;n++)OLED_GRAM[n][i]=0X00;
-        OLED_Refresh_Gram();
+        oled_refresh_gram();
 }
 
-void OLED_DrawPoint(u8 x,u8 y,u8 t)
+void oled_draw_point(u8 x,u8 y,u8 t)
 {
         u8 pos,bx,temp=0;
         if(x>127||y>63)return;
@@ -103,12 +103,12 @@ void oled_draw_rectangle(u8 x1,u8 y1,u8 x2,u8 y2,u8 dot)
         u8 x,y;
         for(x=x1;x<=x2;x++)
         {
-                for(y=y1;y<=y2;y++)OLED_DrawPoint(x,y,dot);
+                for(y=y1;y<=y2;y++)oled_draw_point(x,y,dot);
         }
-        OLED_Refresh_Gram();
+        oled_refresh_gram();
 }
 
-void OLED_ShowChar(u8 x,u8 y,u8 chr,u8 size,u8 mode)
+void oled_draw_char(u8 x,u8 y,u8 chr,u8 size,u8 mode)
 {
         u8 temp,t,t1;
         u8 y0=y;
@@ -119,8 +119,8 @@ void OLED_ShowChar(u8 x,u8 y,u8 chr,u8 size,u8 mode)
                 else temp=oled_asc2_1608[chr][t];
         for(t1=0;t1<8;t1++)
                 {
-                        if(temp&0x80)OLED_DrawPoint(x,y,mode);
-                        else OLED_DrawPoint(x,y,!mode);
+                        if(temp&0x80)oled_draw_point(x,y,mode);
+                        else oled_draw_point(x,y,!mode);
                         temp<<=1;
                         y++;
                         if((y-y0)==size)
@@ -140,7 +140,7 @@ u32 oled_pow(u8 m,u8 n)
         return result;
 }
 
-void OLED_ShowNumber(u8 x,u8 y,u32 num,u8 len,u8 size)
+void oled_draw_number(u8 x,u8 y,u32 num,u8 len,u8 size)
 {
         u8 t,temp;
         u8 enshow=0;
@@ -151,24 +151,24 @@ void OLED_ShowNumber(u8 x,u8 y,u32 num,u8 len,u8 size)
                 {
                         if(temp==0)
                         {
-                                OLED_ShowChar(x+(size/2)*t,y,' ',size,1);
+                                oled_draw_char(x+(size/2)*t,y,' ',size,1);
                                 continue;
                         }else enshow=1;
 
                 }
-                 OLED_ShowChar(x+(size/2)*t,y,temp+'0',size,1);
+                 oled_draw_char(x+(size/2)*t,y,temp+'0',size,1);
         }
 }
 
-void OLED_ShowString(u8 x,u8 y,const u8 *p)
+void oled_draw_string(u8 x,u8 y,const u8 *p)
 {
 #define MAX_CHAR_POSX 122
 #define MAX_CHAR_POSY 58
     while(*p!='\0')
     {
         if(x>MAX_CHAR_POSX){x=0;y+=16;}
-        if(y>MAX_CHAR_POSY){y=x=0;OLED_Clear();}
-        OLED_ShowChar(x,y,*p,12,1);
+        if(y>MAX_CHAR_POSY){y=x=0;oled_clear_screen();}
+        oled_draw_char(x,y,*p,12,1);
         x+=8;
         p++;
     }
@@ -185,40 +185,40 @@ void oled_init(void)
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
         GPIO_Init(GPIOB, &GPIO_InitStructure);
         
-        OLED_RST_Clr();
+        OLED_RST = 0;
         delay_ms(300);
-        OLED_RST_Set();
+        OLED_RST = 1;
         
-        OLED_WR_Byte(0xAE);
-        OLED_WR_Byte(0xD5);
-        OLED_WR_Byte(0x80);
-        OLED_WR_Byte(0xA8);
-        OLED_WR_Byte(0X3F);
-        OLED_WR_Byte(0xD3);
-        OLED_WR_Byte(0X00);
+        oled_write_cmd(0xAE);
+        oled_write_cmd(0xD5);
+        oled_write_cmd(0x80);
+        oled_write_cmd(0xA8);
+        oled_write_cmd(0X3F);
+        oled_write_cmd(0xD3);
+        oled_write_cmd(0X00);
 
-        OLED_WR_Byte(0x40);
+        oled_write_cmd(0x40);
 
-        OLED_WR_Byte(0x8D);
-        OLED_WR_Byte(0x14);
-        OLED_WR_Byte(0x20);
-        OLED_WR_Byte(0x02);
-        OLED_WR_Byte(0xA1);
-        OLED_WR_Byte(0xC0);
-        OLED_WR_Byte(0xDA);
-        OLED_WR_Byte(0x12);
+        oled_write_cmd(0x8D);
+        oled_write_cmd(0x14);
+        oled_write_cmd(0x20);
+        oled_write_cmd(0x02);
+        oled_write_cmd(0xA1);
+        oled_write_cmd(0xC0);
+        oled_write_cmd(0xDA);
+        oled_write_cmd(0x12);
 
-        OLED_WR_Byte(0x81);
-        OLED_WR_Byte(0xEF);
-        OLED_WR_Byte(0xD9);
-        OLED_WR_Byte(0xf1);
-        OLED_WR_Byte(0xDB);
-        OLED_WR_Byte(0x30);
+        oled_write_cmd(0x81);
+        oled_write_cmd(0xEF);
+        oled_write_cmd(0xD9);
+        oled_write_cmd(0xf1);
+        oled_write_cmd(0xDB);
+        oled_write_cmd(0x30);
 
-        OLED_WR_Byte(0xA4);
-        OLED_WR_Byte(0xA6);
-        OLED_WR_Byte(0xAF);
-        OLED_Clear();
+        oled_write_cmd(0xA4);
+        oled_write_cmd(0xA6);
+        oled_write_cmd(0xAF);
+        oled_clear_screen();
         
         delay_ms(100);
 }

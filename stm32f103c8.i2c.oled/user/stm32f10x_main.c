@@ -5,6 +5,9 @@
 #include "bsp_i2c.h"
 #include "bsp_oled.h"
 
+const char *p1 = "Hello world!";
+const char *p2 = "I love you!";
+
 int main(void)
 {
         NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
@@ -14,7 +17,11 @@ int main(void)
         i2c_init();
         oled_init();
         oled_display_on();
-        oled_draw_rectangle(20, 40, 60, 60, 1);
+        
+        oled_draw_string(0, 0, p1);
+        
+        oled_draw_string(0, 20, p2);
+        
         oled_refresh_gram();
         
         while(1)

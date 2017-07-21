@@ -3,10 +3,10 @@
 
 #include "stm32f10x.h"
 
-#define OLED_SCLK       PBout(9)
-#define OLED_SDIN       PBout(8)
-#define OLED_RST        PBout(7)
-#define OLED_RS         PBout(6)
+#define OLED_SCLK PBout(9)
+#define OLED_SDIN PBout(8)
+#define OLED_RST  PBout(7)
+#define OLED_RS   PBout(6)
 
 void oled_write_dat(u8 dat);
 void oled_write_cmd(u8 cmd);

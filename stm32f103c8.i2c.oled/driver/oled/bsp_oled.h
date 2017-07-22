@@ -19,6 +19,6 @@ void oled_draw_point(u8 x, u8 y, u8 t);
 void oled_draw_rectangle(u8 x1, u8 y1, u8 x2, u8 y2, u8 dot);
 void oled_draw_char(u8 x, u8 y, u8 chr, u8 size, u8 mode);
 void oled_draw_number(u8 x, u8 y, u32 num, u8 len, u8 size);
-void oled_draw_string(u8 x, u8 y, const u8 *p);
+void oled_draw_string(u8 x, u8 y, char *p);
 
 #endif /* __BSP_OLED_H */

@@ -5,8 +5,8 @@
 #include "bsp_i2c.h"
 #include "bsp_oled.h"
 
-const char *p1 = "Hello world!";
-const char *p2 = "I love you!";
+char *p1 = "Hello world!";
+char *p2 = "I love you!";
 
 int main(void)
 {

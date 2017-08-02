@@ -12,8 +12,10 @@
  *           i2c_bus_1.scl_gpio_pin = GPIO_Pin_6;
  *           i2c_bus_1.sda_gpio_port = GPIOB;
  *           i2c_bus_1.sda_gpio_pin = GPIO_Pin_7;
- *        3. 调用 i2c_bus_init() 函数初始化 I2C 总线控制器
- *           i2c_bus_init(&i2c_bus_1);
+ *        3. 定义一个全局的总线控制器指针变量
+ *           I2C_BusDef* i2c_ctrl_1;
+ *        4. 调用 i2c_bus_init() 函数初始化 I2C 总线控制器
+ *           i2c_bus_init(i2c_ctrl_1);
  */
 typedef struct
 {
@@ -31,7 +33,7 @@ typedef struct
         u8                      speed;          // I2C 通信时, 每次延时的时间值, 用来控制 I2C 通信的速度
 } I2C_BusDef;
 
-/* 外部声明 I2C 总线结构, 其他文件包含此头文件就可以直接拿到 I2C 总线结构对象 */
+/* 外部声明 I2C 总线控制器结构, 其他文件包含此头文件就可以直接拿到 I2C 总线控制器结构对象 */
 extern I2C_BusDef i2c_bus_1;
 
 void i2c_init(void);

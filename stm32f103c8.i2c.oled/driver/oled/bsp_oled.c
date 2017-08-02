@@ -34,18 +34,8 @@ void oled_refresh_gram(void)
  */
 void oled_write_cmd(u8 cmd)
 {
-        u8 i;
         OLED_RS = 0;
-        for(i = 0; i < 8; i++)
-        {
-                OLED_SCLK = 0;
-                if(cmd & 0x80)
-                        OLED_SDIN = 1;
-                else
-                        OLED_SDIN = 0;
-                OLED_SCLK = 1;
-                cmd <<= 1;
-        }
+        i2c_send_byte(&i2c_bus_1, cmd);
         OLED_RS = 1;
 }
 
@@ -56,18 +46,8 @@ void oled_write_cmd(u8 cmd)
  */
 void oled_write_dat(u8 dat)
 {
-        u8 i;
         OLED_RS = 1;
-        for(i = 0; i < 8; i++)
-        {
-                OLED_SCLK = 0;
-                if(dat & 0x80)
-                        OLED_SDIN = 1;
-                else
-                        OLED_SDIN = 0;
-                OLED_SCLK = 1;
-                dat <<= 1;
-        }
+        i2c_send_byte(&i2c_bus_1, dat);
         OLED_RS = 1;
 }
 
@@ -267,7 +247,7 @@ void oled_init(void)
         /* 配置 OLED 使用到的引脚为推挽输出模式 */
         GPIO_InitTypeDef GPIO_InitStructure;
         RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
-        GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9;
+        GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7; //| GPIO_Pin_8 | GPIO_Pin_9;
         GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
         GPIO_Init(GPIOB, &GPIO_InitStructure);

@@ -17,11 +17,8 @@ int main(void)
         i2c_init();
         oled_init();
         oled_display_on();
-        
         oled_draw_string(0, 0, p1);
-        
         oled_draw_string(0, 20, p2);
-        
         oled_refresh_gram();
         
         while(1)

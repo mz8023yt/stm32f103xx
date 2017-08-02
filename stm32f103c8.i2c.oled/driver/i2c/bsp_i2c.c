@@ -44,7 +44,7 @@ void i2c_bus_init(I2C_BusDef* i2c_bus_x)
         /* 配置 scl 和 sda 初始为输出模式 */
         GPIO_InitStructure.GPIO_Pin = i2c_bus_x->scl_gpio_pin;
         GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
         GPIO_Init(i2c_bus_x->scl_gpio_port, &GPIO_InitStructure);
         
         GPIO_InitStructure.GPIO_Pin = i2c_bus_x->sda_gpio_pin;
@@ -65,6 +65,9 @@ void i2c_bus_init(I2C_BusDef* i2c_bus_x)
         /* 数据线和时钟线默认都是高电平 */
         *(i2c_bus_x->scl) = 1;
         *(i2c_bus_x->sda) = 1;
+        
+        *(i2c_bus_x->scl) = 0;
+        *(i2c_bus_x->sda) = 0;
 }
 
 /**
@@ -88,7 +91,7 @@ void i2c_set_sda_output(I2C_BusDef* i2c_bus_x)
         GPIO_InitTypeDef GPIO_InitStructure;
         GPIO_InitStructure.GPIO_Pin = i2c_bus_x->sda_gpio_pin;
         GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
+        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
         GPIO_Init(i2c_bus_x->sda_gpio_port,&GPIO_InitStructure);
 }
 
